@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"> </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.0/bootstrap-table.min.js"> </script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.0/bootstrap-table.min.css">
+<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+
+
+
+<style>
+
+body {
+  margin: 10px;
+}
+
+.nopadding {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+
+}
+
+
+</style>
+
+<script>
+
+$(document).ready(function() {
+
+
+
+
+  $('textarea').each(function() {
+    this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
+  }).on('input', function() {
+    this.style.height = 'auto';
+    this.style.height = (this.scrollHeight) + 'px';
+  });
+
+  $('.rawContent').hide();
+  $(".rawbtn").click(
+    function() {
+
+      var formID = $(this).closest('.root').attr('id');
+
+
+      var content = $('#' + formID).find('#content');
+      var raw = $('#' + formID).find('#rawContent');
+      raw.height(content.height());
+      content.hide();
+      raw.show();
+
+
+
+
+
+
+      var raw = build("notes", formID) + build("resolution", formID);
+
+      $('#' + formID).find('#rawContent').val(
+
+        raw.replace(/<br.*?>/g, '\n')
+
+      );
+
+      // copyToClipboard( build("notes", formID)   + build("resolution", formID));
+
+
+    }
+  );
+
+  $(".copynotesbtn").click(
+    function() {
+
+      var formID = $(this).closest('.root').attr('id')
+
+      // console.log('id=' + formID)
+
+      copyToClipboard(build("notes", formID));
+
+    }
+  );
+
+  $(".copyresbtn").click(
+    function() {
+
+      var formID = $(this).closest('.root').attr('id')
+
+      // console.log('id=' + formID)
+
+      copyToClipboard(build("resolution", formID));
+
+    }
+  );
+
+  $(".newbtn").click(
+    function() {
+      duplicate();
+    }
+  );
+});
+
+
+function build(infoType, formData) {
+
+  var text = "";
+
+
+  var elements = $('#' + formData).find('#' + infoType).find('input, textarea').each(function() {
+
+    var line = this.name + ': ' + this.value.replace(/\n\r?/g, '<br />');
+
+    text = text + line + "<br />";
+
+
+
+  });
+  console.log(text);
+
+  return '' + text;
+
+
+
+
+
+
+}
+
+
+function duplicate() {
+  console.log('cloning');
+  $('#form' + i).clone(true, true).prop('id', 'form' + ++i).appendTo("#page").find('input, textarea').val('');;
+
+
+
+
+  var content = $('#form' + i).find('#content');
+  var raw = $('#form' + i).find('#rawContent');
+
+  content.show();
+  raw.hide();
+
+
+
+
+  console.log(i);
+}
+
+var i = 0;
+
+
+
+
+function copyToClipboard(html, el) {
+
+  window.getSelection().removeAllRanges();
+  var tmpEl;
+  if (typeof el !== "undefined") {
+    // you may want some specific styling for your content - then provide a custom DOM node with classes, inline styles or whatever you want
+    tmpEl = el;
+  } else {
+    // else we'll just create one
+    tmpEl = document.createElement("div");
+
+    // since we remove the element immedeately we'd actually not have to style it - but IE 11 prompts us to confirm the clipboard interaction and until you click the confirm button, the element would show. so: still extra stuff for IE, as usual.
+    tmpEl.style.opacity = 0;
+    tmpEl.style.position = "absolute";
+    tmpEl.style.pointerEvents = "none";
+    tmpEl.style.zIndex = -1;
+  }
+
+  // fill it with your HTML
+  tmpEl.innerHTML = html;
+
+  // append the temporary node to the DOM
+  document.body.appendChild(tmpEl);
+
+  // select the newly added node
+  var range = document.createRange();
+  range.selectNode(tmpEl);
+  window.getSelection().addRange(range);
+
+
+  // copy
+  document.execCommand("copy");
+
+  // and remove the element immediately
+  document.body.removeChild(tmpEl);
+}
+
+
+
+
+</script>
+
+</head>
+<body>
+
+<div id='page'>
+
+
+  <div class='root' id="form0">
+
+
+    <form class="form-horizontal">
+      <fieldset>
+
+        <div id="content">
+
+
+          <div id="notes">
+
+
+
+            <!-- Text input-->
+            <div class="container-fluid ">
+              <div class="row">
+
+
+                <div class="col-xs-4 nopadding">
+
+                  <input id="wtn" name="wtn" type="text" placeholder="BTN/WTN" class="form-control">
+                </div>
+
+
+
+
+                <div class="col-xs-4 nopadding">
+                  <input id="cbr" name="cbr" type="text" placeholder="CBR" class="form-control">
+                </div>
+
+
+
+                <div class="col-xs-4 nopadding">
+                  <input id="verified" name="verified" type="text" placeholder="Verified" class="form-control">
+
+                </div>
+
+
+              </div>
+
+            </div>
+
+
+
+            <!-- Text input-->
+            <div class="form-group nopadding">
+              <div class="col-md-4">
+                <input id="acctname" name="account name" type="text" placeholder="Account Name" class="form-control input-md">
+
+              </div>
+            </div>
+
+            <!-- Text input-->
+            <div class="form-group nopadding">
+              <div class="col-md-4 ">
+                <input id="speaking" name="speaking with" type="text" placeholder="Speaking With" class="form-control input-md">
+
+              </div>
+            </div>
+
+
+
+            <!-- Text input-->
+            <div class="form-group nopadding">
+              <div class="col-md-4">
+                <input id="email" name="email" type="text" placeholder="Email" class="form-control input-md">
+
+              </div>
+            </div>
+
+            <!-- Text input-->
+            <div class="form-group nopadding">
+              <div class="col-md-4">
+                <input id="issue" name="issue" type="text" placeholder="Issue" class="form-control input-md">
+
+              </div>
+            </div>
+
+
+
+
+
+
+            <!-- Text input-->
+            <div class="form-group nopadding">
+
+              <div class="col-md-4">
+                <input id="servicetype" name="service type" type="text" placeholder="Service Type" class="form-control input-md">
+
+              </div>
+            </div>
+
+          </div>
+
+          <div id="resolution">
+
+
+
+
+            <!-- Textarea -->
+            <div class="form-group nopadding">
+
+              <div class="col-md-4">
+                <textarea class="form-control" id="troubleshooting" name="troubleshooting" placeholder="Troubleshooting Steps..."></textarea>
+              </div>
+            </div>
+
+
+
+            <div class="container-fluid">
+              <div class="row">
+
+
+                <div class="col-xs-6">
+                  <input id="survey" name="survey" type="text" placeholder="Survey" class="form-control input-md">
+
+                </div>
+
+                <div class="col-xs-6">
+                  <input id="fsecure" name="fsecure" type="text" placeholder="F-Secure" class="form-control input-md">
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <textarea class="rawContent form-control" id="rawContent" name="rawContent"></textarea>
+
+        <!-- Button (Double) -->
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="newbtn"></label>
+          <div class="col-md-8">
+            <a id="newbtn" name="newbtn" href="#" class="newbtn btn btn-danger">New Call</a>
+
+
+            <!-- <a id="formbtn" name="newbtn" class="btn btn-info">Form</a> -->
+
+            <a id="rawbtn" name="rawbtn" class="rawbtn btn btn-primary">Raw</a>
+
+            <a id="copynotesbtn" name="copyNotesbtn" class="copynotesbtn btn btn-primary">Copy Notes</a>
+            <a id="copyresbtn" name="copyRestbtn" class="copyresbtn btn btn-primary">Copy Res</a>
+
+          </div>
+        </div>
+
+      </fieldset>
+    </form>
+
+  </div>
+</div>
+</body>
+</html>
